@@ -1,0 +1,1624 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "工作台系统",
+    "description": "all for work",
+    "version": ""
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/captcha/math": {
+      "post": {
+        "summary": "获取数学验证码",
+        "operationId": "mathCaptcha",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CaptchaReq"
+            }
+          }
+        ],
+        "tags": [
+          "captcha"
+        ]
+      }
+    },
+    "/v1/captcha/process": {
+      "post": {
+        "summary": "验证码校验",
+        "operationId": "processCaptcha",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProcessCaptchaReq"
+            }
+          }
+        ],
+        "tags": [
+          "captcha"
+        ]
+      }
+    },
+    "/v1/captcha/show": {
+      "get": {
+        "summary": "验证码图片",
+        "operationId": "showCaptcha",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "tags": [
+          "captcha"
+        ]
+      }
+    },
+    "/v1/company/companyList": {
+      "get": {
+        "operationId": "GetCompanyList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "company"
+        ]
+      }
+    },
+    "/v1/log/all": {
+      "post": {
+        "summary": "获取日志，根据参数，可获取所有日志、日期日志，IP日志",
+        "operationId": "GetAllLog",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LogListReq"
+            }
+          }
+        ],
+        "tags": [
+          "log"
+        ]
+      }
+    },
+    "/v1/log/login": {
+      "post": {
+        "summary": "获取登录日志",
+        "operationId": "GetLoginLog",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LogListReq"
+            }
+          }
+        ],
+        "tags": [
+          "log"
+        ]
+      }
+    },
+    "/v1/menu/addBaseMenu": {
+      "post": {
+        "operationId": "addBaseMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/v1/menu/addMenuAuthority": {
+      "post": {
+        "operationId": "addMenuAuthority",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/v1/menu/deleteBaseMenu": {
+      "post": {
+        "operationId": "deleteBaseMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/v1/menu/getBaseMenuById": {
+      "get": {
+        "operationId": "getBaseMenuById",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/v1/menu/getBaseMenuTree": {
+      "get": {
+        "operationId": "getBaseMenuTree",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/v1/menu/getMenu": {
+      "get": {
+        "operationId": "getMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/v1/menu/getMenuAuthority": {
+      "get": {
+        "operationId": "getMenuAuthority",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/v1/menu/getMenuList": {
+      "get": {
+        "operationId": "getMenuList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/v1/menu/updateBaseMenu": {
+      "post": {
+        "operationId": "updateBaseMenu",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "menu"
+        ]
+      }
+    },
+    "/v1/rbac/GetAllObjects": {
+      "get": {
+        "operationId": "GetAllObjects",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "rbac"
+        ]
+      }
+    },
+    "/v1/rbac/GetAllUsersByDomain": {
+      "get": {
+        "operationId": "GetAllUsersByDomain",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "domain",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "rbac"
+        ]
+      }
+    },
+    "/v1/rbac/GetPermissionsForUserInDomain": {
+      "get": {
+        "operationId": "GetPermissionsForUserInDomain",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "sub",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "dom",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "rbac"
+        ]
+      }
+    },
+    "/v1/rbac/addpolicy": {
+      "post": {
+        "operationId": "AddPolicy",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PolicyReq"
+            }
+          }
+        ],
+        "tags": [
+          "rbac"
+        ]
+      }
+    },
+    "/v1/rbac/getAllActions": {
+      "get": {
+        "operationId": "GetAllActions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "rbac"
+        ]
+      }
+    },
+    "/v1/rbac/getPolicy": {
+      "get": {
+        "operationId": "GetPolicy",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "rbac"
+        ]
+      }
+    },
+    "/v1/rbac/getPolicyByRoleId": {
+      "get": {
+        "operationId": "getPolicyByRoleId",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "rbac"
+        ]
+      }
+    },
+    "/v1/rbac/removePolicies": {
+      "post": {
+        "operationId": "RemovePolicies",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PoliciesReq"
+            }
+          }
+        ],
+        "tags": [
+          "rbac"
+        ]
+      }
+    },
+    "/v1/rbac/removePolicy": {
+      "post": {
+        "operationId": "RemovePolicy",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PolicyReq"
+            }
+          }
+        ],
+        "tags": [
+          "rbac"
+        ]
+      }
+    },
+    "/v1/role": {
+      "get": {
+        "operationId": "getRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "role"
+        ]
+      },
+      "delete": {
+        "operationId": "deleteRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IdReq"
+            }
+          }
+        ],
+        "tags": [
+          "role"
+        ]
+      },
+      "post": {
+        "operationId": "addRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RoleReq"
+            }
+          }
+        ],
+        "tags": [
+          "role"
+        ]
+      },
+      "put": {
+        "operationId": "updateRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RoleReq"
+            }
+          }
+        ],
+        "tags": [
+          "role"
+        ]
+      }
+    },
+    "/v1/role/roleList": {
+      "get": {
+        "operationId": "getRoleList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "role"
+        ]
+      }
+    },
+    "/v1/user": {
+      "get": {
+        "operationId": "getUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "delete": {
+        "operationId": "delUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IdReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "post": {
+        "operationId": "addUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserInfoReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "put": {
+        "operationId": "putUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserInfoReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/user/all": {
+      "get": {
+        "operationId": "getUserAll",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/user/currentInfo": {
+      "get": {
+        "operationId": "getCurrentUserInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      },
+      "delete": {
+        "operationId": "delCurrentUserInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      },
+      "put": {
+        "operationId": "putCurrentUserInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserSelfInfoReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/user/currentPassword": {
+      "post": {
+        "operationId": "putCurrentUserPassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserPutPwdReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/user/login": {
+      "post": {
+        "operationId": "login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserLoginReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/user/logout": {
+      "get": {
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/user/register": {
+      "post": {
+        "operationId": "register",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserRegisterReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/user/search": {
+      "get": {
+        "operationId": "searchUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/v1/rbac/addPolicies": {
+      "post": {
+        "operationId": "AddPolicies",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/BaseResp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PoliciesReq"
+            }
+          }
+        ],
+        "tags": [
+          "rbac"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "BaseResp": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "format": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "title": "BaseResp",
+      "required": [
+        "success",
+        "message",
+        "data"
+      ]
+    },
+    "CaptchaBgColor": {
+      "type": "object",
+      "properties": {
+        "R": {
+          "$ref": "#/definitions/uint8"
+        },
+        "G": {
+          "$ref": "#/definitions/uint8"
+        },
+        "B": {
+          "$ref": "#/definitions/uint8"
+        },
+        "A": {
+          "$ref": "#/definitions/uint8"
+        }
+      },
+      "title": "CaptchaBgColor",
+      "required": [
+        "R",
+        "G",
+        "B",
+        "A"
+      ]
+    },
+    "CaptchaInfo": {
+      "type": "object",
+      "properties": {
+        "captcha_key": {
+          "type": "string",
+          "description": "验证码Key"
+        },
+        "base64_image": {
+          "type": "string",
+          "description": "base46图片"
+        }
+      },
+      "title": "CaptchaInfo",
+      "required": [
+        "captcha_key",
+        "base64_image"
+      ]
+    },
+    "CaptchaReq": {
+      "type": "object",
+      "properties": {
+        "height": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "width": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "BgColor": {
+          "$ref": "#/definitions/CaptchaBgColor"
+        }
+      },
+      "title": "CaptchaReq",
+      "required": [
+        "height",
+        "width",
+        "BgColor"
+      ]
+    },
+    "DomainReq": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string"
+        }
+      },
+      "title": "DomainReq",
+      "required": [
+        "domain"
+      ]
+    },
+    "IdReq": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "IdReq",
+      "required": [
+        "id"
+      ]
+    },
+    "JwtToken": {
+      "type": "object",
+      "properties": {
+        "access_token": {
+          "type": "string"
+        },
+        "access_expire": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "JwtToken",
+      "required": [
+        "access_token",
+        "access_expire"
+      ]
+    },
+    "ListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "ListReq",
+      "required": [
+        "page",
+        "limit"
+      ]
+    },
+    "LogListReq": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "string",
+          "description": "开始日期"
+        },
+        "end": {
+          "type": "string",
+          "description": "结束日期"
+        },
+        "ip": {
+          "type": "string",
+          "description": "IP"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int64",
+          "description": "页码"
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int64",
+          "description": "每页数量"
+        }
+      },
+      "title": "LogListReq",
+      "required": [
+        "start",
+        "end",
+        "page",
+        "limit"
+      ]
+    },
+    "PoliciesReq": {
+      "type": "object",
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PolicyReq"
+          }
+        }
+      },
+      "title": "PoliciesReq",
+      "required": [
+        "rules"
+      ]
+    },
+    "PolicyReq": {
+      "type": "object",
+      "properties": {
+        "sub": {
+          "type": "string"
+        },
+        "dom": {
+          "type": "string"
+        },
+        "obj": {
+          "type": "string"
+        },
+        "act": {
+          "type": "string"
+        }
+      },
+      "title": "PolicyReq",
+      "required": [
+        "sub",
+        "dom",
+        "obj",
+        "act"
+      ]
+    },
+    "ProcessCaptchaReq": {
+      "type": "object",
+      "properties": {
+        "captcha_key": {
+          "type": "string"
+        },
+        "solution": {
+          "type": "string"
+        }
+      },
+      "title": "ProcessCaptchaReq",
+      "required": [
+        "captcha_key",
+        "solution"
+      ]
+    },
+    "RoleAndDomainReq": {
+      "type": "object",
+      "properties": {
+        "sub": {
+          "type": "string"
+        },
+        "dom": {
+          "type": "string"
+        }
+      },
+      "title": "RoleAndDomainReq",
+      "required": [
+        "sub",
+        "dom"
+      ]
+    },
+    "RoleReq": {
+      "type": "object",
+      "properties": {
+        "rid": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "description": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        }
+      },
+      "title": "RoleReq",
+      "required": [
+        "rid",
+        "name",
+        "status",
+        "description",
+        "icon"
+      ]
+    },
+    "UserAllInfo": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "integer",
+          "format": "int64",
+          "description": " UID主键"
+        },
+        "real_name": {
+          "type": "string",
+          "description": " 用户姓名"
+        },
+        "avatar": {
+          "type": "string",
+          "description": " 用户头像"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 用户性别,男是1，女是0"
+        },
+        "passport": {
+          "type": "string",
+          "description": " 账号"
+        },
+        "password": {
+          "type": "string",
+          "description": " 密码"
+        },
+        "email": {
+          "type": "string",
+          "description": " 邮箱地址"
+        },
+        "mobile": {
+          "type": "string",
+          "description": " 电话号码"
+        },
+        "role_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 外键，角色id"
+        },
+        "role_name": {
+          "type": "string",
+          "description": " 角色昵称"
+        },
+        "company_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 外键，所属公司id"
+        },
+        "company_name": {
+          "type": "string",
+          "description": " 所属公司名称"
+        },
+        "qq": {
+          "type": "string",
+          "description": " 用户QQ"
+        },
+        "wechat": {
+          "type": "string",
+          "description": " 用户微信"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 账号状态(默认0不可用状态)"
+        },
+        "create_time": {
+          "type": "string",
+          "description": " 创建时间"
+        },
+        "update_time": {
+          "type": "string",
+          "description": " 更新时间"
+        },
+        "description": {
+          "type": "string",
+          "description": " 说明"
+        }
+      },
+      "title": "UserAllInfo",
+      "required": [
+        "uid",
+        "real_name",
+        "avatar",
+        "gender",
+        "passport",
+        "password",
+        "email",
+        "mobile",
+        "role_id",
+        "role_name",
+        "company_id",
+        "company_name",
+        "qq",
+        "wechat",
+        "status",
+        "create_time",
+        "update_time",
+        "description"
+      ]
+    },
+    "UserInfoReq": {
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "integer",
+          "format": "int64",
+          "description": " UID主键"
+        },
+        "real_name": {
+          "type": "string",
+          "description": " 用户姓名"
+        },
+        "avatar": {
+          "type": "string",
+          "description": " 用户头像"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 用户性别,男是1，女是0"
+        },
+        "passport": {
+          "type": "string",
+          "description": " 账号"
+        },
+        "password": {
+          "type": "string",
+          "description": " 密码"
+        },
+        "email": {
+          "type": "string",
+          "description": " 邮箱地址"
+        },
+        "mobile": {
+          "type": "string",
+          "description": " 电话号码"
+        },
+        "role_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 外键，角色id"
+        },
+        "company_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 外键，所属公司id"
+        },
+        "qq": {
+          "type": "string",
+          "description": " 用户QQ"
+        },
+        "wechat": {
+          "type": "string",
+          "description": " 用户微信"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 账号状态(默认0不可用状态)"
+        },
+        "description": {
+          "type": "string",
+          "description": " 说明"
+        }
+      },
+      "title": "UserInfoReq",
+      "required": [
+        "uid",
+        "real_name",
+        "avatar",
+        "gender",
+        "passport",
+        "password",
+        "email",
+        "mobile",
+        "role_id",
+        "company_id",
+        "qq",
+        "wechat",
+        "status",
+        "description"
+      ]
+    },
+    "UserLoginReq": {
+      "type": "object",
+      "properties": {
+        "passport": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "autoLogin": {
+          "type": "boolean",
+          "format": "boolean",
+          "default": "false"
+        },
+        "captcha_key": {
+          "type": "string",
+          "description": "验证码ID"
+        },
+        "solution": {
+          "type": "string",
+          "description": "验证码答案"
+        }
+      },
+      "title": "UserLoginReq",
+      "required": [
+        "passport",
+        "password",
+        "autoLogin",
+        "captcha_key",
+        "solution"
+      ]
+    },
+    "UserPutPwdReq": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "UserPutPwdReq",
+      "required": [
+        "password"
+      ]
+    },
+    "UserRegisterReq": {
+      "type": "object",
+      "properties": {
+        "passport": {
+          "type": "string",
+          "description": "账号，只能为字母和数字的组合，不能有特殊符号"
+        },
+        "real_name": {
+          "type": "string",
+          "description": "称呼，必须为真实姓名，中文名"
+        },
+        "email": {
+          "type": "string",
+          "description": "邮箱"
+        },
+        "mobile": {
+          "type": "string",
+          "description": "手机"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int64",
+          "description": "性别"
+        },
+        "role_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "角色ID"
+        },
+        "company_id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "公司ID"
+        },
+        "qq": {
+          "type": "string",
+          "description": "QQ，选填"
+        },
+        "wechat": {
+          "type": "string",
+          "description": "微信，选填"
+        },
+        "password": {
+          "type": "string",
+          "description": " 密码"
+        },
+        "captcha_key": {
+          "type": "string",
+          "description": "验证码ID"
+        },
+        "solution": {
+          "type": "string",
+          "description": "验证码答案"
+        }
+      },
+      "title": "UserRegisterReq",
+      "required": [
+        "passport",
+        "real_name",
+        "email",
+        "mobile",
+        "gender",
+        "role_id",
+        "company_id",
+        "password",
+        "captcha_key",
+        "solution"
+      ]
+    },
+    "UserSearchReq": {
+      "type": "object",
+      "properties": {
+        "keyword": {
+          "type": "string"
+        }
+      },
+      "title": "UserSearchReq",
+      "required": [
+        "keyword"
+      ]
+    },
+    "UserSelfInfoReq": {
+      "type": "object",
+      "properties": {
+        "real_name": {
+          "type": "string",
+          "description": " 用户姓名"
+        },
+        "avatar": {
+          "type": "string",
+          "description": " 用户头像"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "int64",
+          "description": " 用户性别,男是1，女是0"
+        },
+        "passport": {
+          "type": "string",
+          "description": " 账号"
+        },
+        "email": {
+          "type": "string",
+          "description": " 邮箱地址"
+        },
+        "mobile": {
+          "type": "string",
+          "description": " 电话号码"
+        },
+        "qq": {
+          "type": "string",
+          "description": " 用户QQ"
+        },
+        "wechat": {
+          "type": "string",
+          "description": " 用户微信"
+        },
+        "description": {
+          "type": "string",
+          "description": " 说明"
+        }
+      },
+      "title": "UserSelfInfoReq",
+      "required": [
+        "real_name",
+        "avatar",
+        "gender",
+        "passport",
+        "email",
+        "mobile",
+        "qq",
+        "wechat",
+        "description"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "apiKey": []
+    }
+  ]
+}

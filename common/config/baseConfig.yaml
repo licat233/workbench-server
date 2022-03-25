@@ -1,0 +1,18 @@
+Mysql:
+  DataSource: workbench:8kMRrkDB2aKkf5Mk@tcp(127.0.0.1:3306)/workbench?parseTime=True&charset=utf8mb4&collation=utf8mb4_unicode_ci
+  Table: 
+CacheRedis:
+  - Host: 127.0.0.1:6379
+    Pass:
+    Type: node
+Auth:
+  AccessSecret: licat233333333
+  AccessExpire: 86400
+Etcd:
+  Hosts:
+    - 127.0.0.1:2379
+  Key: 
+Log:
+  Mode: file
+  Path: /www/grpc/workbench/logs
+  Level: error

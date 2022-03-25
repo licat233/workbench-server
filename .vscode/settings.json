@@ -1,0 +1,23 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "ecs-workbench",
+            "database": "workbench",
+            "username": "workbench",
+            "password": "8kMRrkDB2aKkf5Mk"
+        }
+    ],
+    "cSpell.words": [
+        "errorx",
+        "httpx",
+        "mojocn",
+        "respx"
+    ]
+}
