@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package app;
+
+option go_package = "app";
+
+message StatusResp {
+  bool Success = 1;
+  string Message = 2;
+}
+
+// message CaptchaReq {
+//   string CaptchaType = 1;
+// }
+
+// message CaptchaResp {
+//   string CaptchaKey = 1;
+//   string Base64Image = 2;
+// }
+
+// message CaptchaProcessResp {
+//   bool Success = 1;
+// }
+
+message LogRequest {
+  string Start = 1;
+  string End = 2;
+  string IP = 3;
+  int64 Page = 4;
+  int64 Limit = 5;
+}
+
+message LogInfoReq {
+  string Ip = 1;
+  string Method = 2;
+  string Path = 3;
+  int64  Status = 4;
+  string ErrorMessage = 5;
+  string Body = 6;
+  string Resp = 7;
+  int64  UserId = 8;
+  string CreateTime = 9;
+  string JwtToken = 10;
+}
+
+message IpLoginFailCountReq {
+  string IP = 1;
+}
+
+message IpLoginFailCountResp {
+  int64 Count = 1;
+}
+
+service App {
+  //获取某IP在今天内的登录错误的次数
+  rpc GetLoginFailCount(IpLoginFailCountReq) returns(IpLoginFailCountResp);
+
+  //添加登录日志,路径统一为：/user/login
+  rpc AddLog(LogInfoReq) returns(StatusResp);
+}
