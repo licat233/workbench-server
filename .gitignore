@@ -16,7 +16,7 @@
 
 
 # log files
-./service/app/api/v1/logs/*
+./service/app/api/v1/logs/
 
 # air tmp dir
-./service/app/api/v1/tmp/*
+./service/app/api/v1/tmp/
