@@ -3,7 +3,7 @@ package rbac
 import (
 	"context"
 
-	"workbench-server/common/respx"
+	"workbench-server/global/respx"
 	"workbench-server/service/app/api/v1/internal/svc"
 	"workbench-server/service/app/api/v1/internal/types"
 

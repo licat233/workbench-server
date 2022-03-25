@@ -3,8 +3,8 @@ package log
 import (
 	"context"
 
-	"workbench-server/common/errorx"
-	"workbench-server/common/respx"
+	"workbench-server/global/errorx"
+	"workbench-server/global/respx"
 	"workbench-server/service/app/api/v1/internal/svc"
 	"workbench-server/service/app/api/v1/internal/types"
 

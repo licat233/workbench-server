@@ -10,7 +10,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
-	"workbench-server/common/errorx"
+	"workbench-server/global/errorx"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )

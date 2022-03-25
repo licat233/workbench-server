@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"workbench-server/common/errorx"
+	"workbench-server/global/errorx"
 	"workbench-server/service/app/api/v1/internal/svc"
 
 	"github.com/mojocn/base64Captcha"

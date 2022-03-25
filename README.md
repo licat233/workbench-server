@@ -148,7 +148,7 @@
 >>
 > ### ②. 根据 proto文件 生成 rpc代码
 >> ```
->> goctl rpc proto -src log.proto -dir='./v1' -style goZero
+>> goctl rpc proto -src app.proto -dir='./v1' -style goZero
 >> ```
 >>
 > ### ③. 启动 rpc 服务

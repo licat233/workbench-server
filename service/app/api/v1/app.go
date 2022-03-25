@@ -6,9 +6,9 @@ import (
 	"os"
 	"time"
 
-	"workbench-server/common/errorx"
-	"workbench-server/common/logxs"
-	"workbench-server/common/utils"
+	"workbench-server/global/errorx"
+	"workbench-server/global/logxs"
+	"workbench-server/global/utils"
 	"workbench-server/service/app/api/v1/internal/config"
 	"workbench-server/service/app/api/v1/internal/handler"
 	"workbench-server/service/app/api/v1/internal/svc"

@@ -3,7 +3,7 @@ package websiteConfig
 import (
 	"context"
 
-	"workbench-server/common/respx"
+	"workbench-server/global/respx"
 	"workbench-server/service/app/api/v1/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"

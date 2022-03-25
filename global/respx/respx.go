@@ -1,8 +1,8 @@
 package respx
 
 import (
-	"workbench-server/common/errorx"
-	"workbench-server/common/utils"
+	"workbench-server/global/errorx"
+	"workbench-server/global/utils"
 	"workbench-server/service/app/model"
 )
 

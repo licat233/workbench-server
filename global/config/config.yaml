@@ -1,0 +1,31 @@
+Mysql:
+  DataSource: workbench:8kMRrkDB2aKkf5Mk@tcp(127.0.0.1:3306)/workbench?parseTime=True&charset=utf8mb4&collation=utf8mb4_unicode_ci&loc=Local
+Redis:
+  - Host: 127.0.0.1:6379
+    Pass:
+    Type: node
+Auth:
+  AccessSecret: licat233333333
+  AccessExpire: 86400
+Storage:
+  Path: /www/wwwroot/workbench/workbench-server/storage
+  Upload:
+    Path: upload
+    Images:
+      Path: images
+      Avatar:
+        Path: avatar
+    Collect:
+      Path: collect
+  Static:
+    Path: static
+    Js:
+      Path: js
+    Css:
+      Path: css
+    Images:
+      Path: images
+    Svg:
+      Path: svg
+    Json:
+      Path: json

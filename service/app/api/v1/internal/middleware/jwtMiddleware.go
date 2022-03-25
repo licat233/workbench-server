@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
-	"workbench-server/common/utils"
+	"workbench-server/global/utils"
 	"workbench-server/service/app/api/v1/internal/config"
 
 	"github.com/zeromicro/go-zero/core/stores/redis"

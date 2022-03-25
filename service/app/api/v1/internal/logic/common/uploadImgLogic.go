@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/http"
 
-	"workbench-server/common/filex"
-	"workbench-server/common/respx"
+	"workbench-server/global/filex"
+	"workbench-server/global/respx"
 	"workbench-server/service/app/api/v1/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"

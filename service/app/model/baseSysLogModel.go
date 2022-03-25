@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
-	"workbench-server/common/utils"
+	"workbench-server/global/utils"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"

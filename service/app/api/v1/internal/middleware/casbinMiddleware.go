@@ -3,11 +3,11 @@ package middleware
 import (
 	"errors"
 	"net/http"
-	"workbench-server/common/errorx"
-	"workbench-server/common/global"
-	"workbench-server/common/utils"
+	"workbench-server/global/errorx"
+	"workbench-server/global/utils"
 
 	"github.com/casbin/casbin/v2"
+	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
@@ -16,9 +16,28 @@ type CasbinMiddleware struct {
 	CasbinObj *casbin.Enforcer
 }
 
+func NewCasbin() *casbin.Enforcer {
+	a, err := gormadapter.NewAdapter("mysql", "workbench:8kMRrkDB2aKkf5Mk@tcp(0.0.0.0:3306)/workbench?parseTime=True&charset=utf8mb4&collation=utf8mb4_unicode_ci", true)
+	if err != nil {
+		logx.Errorf("连接数据库错误: %v", err)
+		return nil
+	}
+	CasbinObj, err := casbin.NewEnforcer("/www/grpc/workbench/common/config/rbac_with_domains_model.conf", a)
+	if err != nil {
+		logx.Errorf("初始化casbin错误: %v", err)
+		return nil
+	}
+	err = CasbinObj.LoadPolicy()
+	if err != nil {
+		logx.Errorf("CasbinObj.LoadPolicy()错误: %v", err)
+		return nil
+	}
+	return CasbinObj
+}
+
 func NewCasbinMiddleware() *CasbinMiddleware {
 	return &CasbinMiddleware{
-		CasbinObj: global.CasbinObj,
+		CasbinObj: NewCasbin(),
 	}
 }
 
@@ -56,7 +75,12 @@ func (m *CasbinMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			httpx.Error(w, err)
 			return
 		}
-		//判断策略中是否存在，sub角色-dom域(公司)-obj资源(url)-act操作(访问方法)
+		if m.CasbinObj == nil {
+			resp := errorx.NewServerError("系统异常，暂时无法访问，请联系管理员", errors.New("服务器RBAC系统异常"))
+			httpx.Error(w, resp)
+			return
+		}
+		//判断策略中是否存在，sub角色(职位)-dom域(公司)-obj资源(url)-act操作(访问方法)
 		if ok, _ := m.CasbinObj.Enforce(sub, dom, obj, act); !ok {
 			logx.Errorf("很遗憾,权限验证没有通过，用户[%d]通过[%s]方法访问[%s]", uid, act, obj)
 			resp := errorx.NewRequestError("权限不足", errors.New("当前用户无权限访问"))
