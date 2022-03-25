@@ -1,1 +1,0 @@
-{"@timestamp":"2022-03-18T14:10:26.605+08","level":"slow","content":"[HTTP] POST - 200 - /v1/user/login - 113.66.55.66 - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36 - slowcall(782.5ms)","trace":"73181957053e388d11e6145fd6f64a79","span":"60e97a407f53feee"}
