@@ -1,0 +1,20 @@
+info(
+	title: "广告活动"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+@server(
+	jwt: Auth
+	middleware: Jwt, Casbin, OperationRecord
+	group: ad
+    prefix: /v1/ad/campaign
+)
+service app-api {
+	@doc(
+		summary: "广告活动"
+	)
+	@handler GetAdCampaignList
+	get /list(ListReq) returns(BaseResp)
+}

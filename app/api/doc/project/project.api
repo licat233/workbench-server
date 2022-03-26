@@ -1,0 +1,20 @@
+info(
+	title: "项目"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+@server(
+	jwt: Auth
+	middleware: Jwt, Casbin, OperationRecord
+	group: project
+    prefix: /v1/project
+)
+service app-api {
+	@doc(
+		summary: "项目"
+	)
+	@handler GetProjectList
+	get /projectList(ListReq) returns(BaseResp)
+}

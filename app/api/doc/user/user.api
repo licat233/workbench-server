@@ -1,0 +1,252 @@
+info(
+	title: "用户"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+//用户注册，必须要有手机号码，邮箱用于验证(暂未实现邮箱验证码)，该注册接口可被关闭
+type UserRegisterReq {
+	Passport   string `json:"passport"`           //账号，只能为字母和数字的组合，不能有特殊符号
+	Name       string `json:"real_name"`          //称呼，必须为真实姓名，中文名
+	Email      string `json:"email"`              //邮箱
+	Mobile     string `json:"mobile"`             //手机
+	Gender     int64  `json:"gender,options=0|1"` //性别,默认男-0，女-1
+	RoleId     int64  `json:"role_id"`            //角色ID
+	CompanyId  int64  `json:"company_id"`         //公司ID
+	QQ         string `json:"qq,optional"`        //QQ，选填
+	Wechat     string `json:"wechat,optional"`    //微信，选填
+	Password   string `json:"password"`           // 密码
+	CaptchaKey string `json:"captcha_key"`        //验证码ID
+	Solution   string `json:"solution"`           //验证码答案
+}
+
+//用户登陆，可用账号、手机号、邮箱登录，(暂未实现验证码登录功能)
+type UserLoginReq {
+	Passport   string `json:"passport"`
+	Password   string `json:"password"`
+	AutoLogin  bool   `json:"autoLogin,default=false"`
+	CaptchaKey string `json:"captcha_key"` //验证码ID
+	Solution   string `json:"solution"`    //验证码答案
+}
+
+//用户搜索，支持用户姓名、账号、邮箱、手机号
+type UserSearchReq {
+	PageSize int64  `form:"pageSize,default=20,range=[1:1000],optional"` //页面大小
+	Current  int64  `form:"current,default=1,range=[1:],optional"`       //当前页码
+	KeyWord  string `json:"keyword"`                                     //关键词，必填
+}
+
+type UserSearchKeyWord {
+	UserRealName string `json:"UserRealName"`           // 用户姓名
+	Avatar       string `json:"avatar"`                 // 用户头像
+	UserGender   int64  `json:"UserGender,options=0|1"` // 用户性别,男是0，女是1
+	Passport     string `json:"passport"`               // 账号
+	Email        string `json:"email"`                  // 邮箱地址
+	Mobile       string `json:"mobile"`                 // 电话号码
+	QQ           string `json:"qq"`                     // 用户QQ
+	Wechat       string `json:"wechat"`                 // 用户微信
+	Description  string `json:"description"`            // 说明
+}
+
+//用户修改密码的请求
+type UserPutPwdReq {
+	OldPassword string `json:"oldPassword"` //新密码
+	NewPassword string `json:"newPassword"` //旧密码
+}
+
+//用户修改手机号的请求
+type UserPutMobileReq {
+	UserMobile string `json:"userMobile"` //用户手机号
+}
+
+//用户修改邮箱的请求
+type UserPutEmailReq {
+	UserEmail string `json:"userEmail"` //用户邮箱
+}
+
+//用户操作自己信息的请求
+type UserSelfInfoReq {
+	RealName    string `json:"real_name"`          // 用户姓名
+	RoleId      int64  `json:"role_id"`            // 外键，角色id
+	Gender      int64  `json:"gender,options=0|1"` // 用户性别,男是0，女是1
+	QQ          string `json:"qq"`                 // 用户QQ
+	Wechat      string `json:"wechat"`             // 用户微信
+	Description string `json:"description"`        // 说明
+}
+
+//管理员操作账户信息的请求
+type UserInfoReq {
+	Uid         int64  `json:"uid"`                // UID主键
+	RealName    string `json:"real_name"`          // 用户姓名
+	Avatar      string `json:"avatar"`             // 用户头像
+	Gender      int64  `json:"gender,options=0|1"` // 用户性别,男是0，女是1
+	Passport    string `json:"passport"`           // 账号
+	Password    string `json:"password"`           // 密码
+	Email       string `json:"email"`              // 邮箱地址
+	Mobile      string `json:"mobile"`             // 电话号码
+	RoleId      int64  `json:"role_id"`            // 外键，角色id
+	CompanyId   int64  `json:"company_id"`         // 外键，所属公司id
+	QQ          string `json:"qq"`                 // 用户QQ
+	Wechat      string `json:"wechat"`             // 用户微信
+	Status      int64  `json:"status"`             // 账号状态(默认0不可用状态)
+	Description string `json:"description"`        // 说明
+}
+
+//添加用户请求
+type UserAddReq {
+	RealName    string `json:"real_name"`          // 用户姓名
+	Avatar      string `json:"avatar"`             // 用户头像
+	Gender      int64  `json:"gender,options=0|1"` // 用户性别,男是0，女是1
+	Passport    string `json:"passport"`           // 账号
+	Password    string `json:"password"`           // 密码
+	Email       string `json:"email"`              // 邮箱地址
+	Mobile      string `json:"mobile"`             // 电话号码
+	RoleId      int64  `json:"role_id"`            // 外键，角色id
+	CompanyId   int64  `json:"company_id"`         // 外键，所属公司id
+	QQ          string `json:"qq"`                 // 用户QQ
+	Wechat      string `json:"wechat"`             // 用户微信
+	Status      int64  `json:"status"`             // 账号状态(默认0不可用状态)
+	Description string `json:"description"`        // 说明
+}
+
+//用户的所有信息，备用
+type UserAllInfo {
+	Uid             int64  `json:"uid"`                // UID主键
+	RealName        string `json:"real_name"`          // 用户姓名
+	Avatar          string `json:"avatar"`             // 用户头像
+	Gender          int64  `json:"gender,options=0|1"` // 用户性别,男是0，女是1
+	Passport        string `json:"passport"`           // 账号
+	Password        string `json:"password"`           // 密码
+	Email           string `json:"email"`              // 邮箱地址
+	Mobile          string `json:"mobile"`             // 电话号码
+	RoleId          int64  `json:"role_id"`            // 外键，角色id
+	UserRoleName    string `json:"role_name"`          // 角色昵称
+	CompanyId       int64  `json:"company_id"`         // 外键，所属公司id
+	UserCompanyName string `json:"company_name"`       // 所属公司名称
+	QQ              string `json:"qq"`                 // 用户QQ
+	Wechat          string `json:"wechat"`             // 用户微信
+	Status          int64  `json:"status"`             // 账号状态(默认0不可用状态)
+	CreateTime      string `json:"create_time"`        // 创建时间
+	UpdateTime      string `json:"update_time"`        // 更新时间
+	Description     string `json:"description"`        // 说明
+}
+
+@server(
+	group: user
+	prefix: /v1/user
+)
+
+service app-api {
+	@doc(
+		summary: 用户注册
+	)
+	
+	@handler register
+	post /register(UserRegisterReq) returns(BaseResp)
+}
+
+@server(
+	group: user
+	middleware: OperationRecord
+	prefix: /v1/user
+)
+service app-api {
+	@doc(
+		summary: 用户登录
+	)
+	@handler login
+	post /login(UserLoginReq) returns(BaseResp)
+}
+
+@server(
+	jwt: Auth
+	group: user
+	middleware: Jwt, Casbin, OperationRecord
+	prefix: /v1/user
+)
+service app-api {
+	@doc(
+		summary: "获取指定ID用户"
+	)
+	@handler getUser
+	get /(IdReq) returns(BaseResp)
+	
+	@doc(
+		summary: "添加用户"
+	)
+	@handler addUser
+	post /(UserAddReq) returns(BaseResp)
+	
+	@doc(
+		summary: "修改用户"
+	)
+	@handler putUser
+	put /(UserInfoReq) returns(BaseResp)
+	
+	@doc(
+		summary: "删除用户"
+	)
+	@handler delUser
+	delete /(BatchIdReq) returns(BaseResp)
+
+	@doc(
+		summary: "用户搜索"
+	)
+	@handler searchUser
+	get /search(UserSearchReq) returns(BaseResp)
+	
+	@doc(
+		summary: "注销登陆、退出，管理员可主动提出"
+	)
+	@handler logout
+	get /logout returns(BaseResp)
+	
+	@doc(  
+		summary: "获取用户列表"
+	)
+	@handler getUserList
+	get /userList(ListReq) returns(BaseResp)
+	
+	@doc(  
+		summary: "修改自己的密码，修改后JWT失效，需要重新登录"
+	)
+	@handler putCurrentUserPassword
+	post /currentPassword(UserPutPwdReq) returns(BaseResp)
+	
+	@doc(  
+		summary: "修改自己的手机号"
+	)
+	@handler putCurrentUserMobile
+	post /currentMobile(UserPutMobileReq) returns(BaseResp)
+	
+	@doc(  
+		summary: "修改自己的邮箱"
+	)
+	@handler putCurrentUserEmail
+	post /currentEmail(UserPutEmailReq) returns(BaseResp)
+	
+	@doc(  
+		summary: "修改自己的头像"
+	)
+	@handler putCurrentUserAvatar
+	post /currentAvatar returns(BaseResp)
+	
+	@doc(  
+		summary: "获取用户自己的信息"
+	)
+	@handler getCurrentUserInfo
+	get /currentInfo returns(BaseResp)
+	
+	@doc(
+		summary: "修改用户自己的信息"
+	)
+	@handler putCurrentUserInfo
+	put /currentInfo(UserSelfInfoReq) returns(BaseResp)
+	
+	@doc(
+		summary: "删除用户自己的账户"
+	)
+	@handler delCurrentUserInfo
+	delete /currentInfo returns(BaseResp)
+}

@@ -1,0 +1,50 @@
+info(
+	title: "角色/职位"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+
+//角色管理请求
+type RoleReq {
+	Rid         int64  `json:"rid"`
+	Name        string `json:"name"`
+	Status      int64  `json:"status"`
+	Description string `json:"description"`
+	Icon        string `json:"icon"`
+}
+
+@server(
+	group: role
+    prefix: /v1/role
+)
+service app-api {
+	@doc(
+		summary: "角色列表"
+	)
+	@handler getRoleList
+	get /roleList(ListReq) returns(BaseResp)
+}
+
+@server(
+	jwt: Auth
+	middleware: Jwt, Casbin, OperationRecord
+	group: role
+)
+service app-api {
+	@doc(
+		summary: "角色"
+	)
+	@handler getRole
+	get /(IdReq) returns(BaseResp)
+	
+	@handler addRole
+	post /(RoleReq) returns(BaseResp)
+	
+	@handler updateRole
+	put /(RoleReq) returns(BaseResp)
+	
+	@handler deleteRole
+	delete /(IdReq) returns(BaseResp)
+}

@@ -1,0 +1,67 @@
+info(
+	title: "验证码"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+
+//--------captcha----------
+type CaptchaReq {
+	//Height png height in pixel.
+	Height int `json:"height"`
+
+	// Width Captcha png width in pixel.
+	Width int `json:"width"`
+
+	//BgColor captcha image background color (optional)
+	BgColor CaptchaBgColor `json:"BgColor"`
+}
+type EmailCaptchaReq {
+	Address string `json:"address"` //接收验证码的邮箱地址
+}
+type CaptchaBgColor {
+	R uint8 `json:"R"`
+	G uint8 `json:"G"`
+	B uint8 `json:"B"`
+	A uint8 `json:"A"`
+}
+type CaptchaInfo {
+	CaptchaKey  string `json:"captcha_key"`  //验证码Key
+	Base64Image string `json:"base64_image"` //base46图片
+}
+type ProcessCaptchaReq {
+	CaptchaKey string `json:"captcha_key"`
+	Solution   string `json:"solution"`
+}
+//--------end captcha----------
+
+@server(
+	group: captcha
+    prefix: /v1/captcha
+)
+service app-api {
+	@doc(
+		summary: "获取数学验证码"
+	)
+	@handler mathCaptcha
+	post /math(CaptchaReq) returns(BaseResp)
+	
+	@doc(
+		summary: "验证码图片"
+	)
+	@handler showCaptcha
+	get /show
+	
+	@doc(
+		summary: "验证码校验"
+	)
+	@handler processCaptcha
+	post /process(ProcessCaptchaReq) returns(BaseResp)
+	
+	@doc(
+		summary: "获取发送邮箱验证码"
+	)
+	@handler emailCaptcha
+	post /email(EmailCaptchaReq) returns(BaseResp)
+}

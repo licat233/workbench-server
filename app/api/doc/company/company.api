@@ -1,0 +1,18 @@
+info(
+	title: "公司"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+@server(
+	group: company
+    prefix: /v1/company
+)
+service app-api {
+	@doc(
+		summary: "公司"
+	)
+	@handler GetCompanyList
+	get /companyList(ListReq) returns(BaseResp)
+}

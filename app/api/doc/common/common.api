@@ -1,0 +1,38 @@
+info(
+	title: "通用规范"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+//---------common---------
+//规范返回格式
+type BaseResp {
+	Success bool        `json:"success"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
+type DownloadReq {
+	File string `path:"file"`
+}
+//通用的ID请求
+type IdReq {
+	Id int64 `json:"id"`
+}
+
+//通用的批量ID请求
+type BatchIdReq {
+	Id []int64 `json:"id"`
+}
+
+//通用页面数据请求
+type ListReq {
+	PageSize int64  `form:"pageSize,default=20,range=[1:1000]"` //页面大小
+	Current  int64  `form:"current,default=1,range=[1:]"`       //当前页码
+	KeyWord  string `form:"keyword,optional"`                   //关键词，可选
+}
+
+type JwtToken {
+	AccessToken  string `json:"access_token"`
+	AccessExpire int64  `json:"access_expire"`
+}

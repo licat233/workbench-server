@@ -118,7 +118,7 @@
 > ### ②. 根据 api文件 生成 api服务，-dir='api路径'
 >>
 >> ```
->> goctl api go -api app.api -dir='./v1' -style goZero
+>> goctl api go -api app.api -dir='../v1' -style goZero
 >> ```
 >>
 > ### ③. 启动 api 服务

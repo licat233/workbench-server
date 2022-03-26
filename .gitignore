@@ -16,10 +16,10 @@
 
 
 # log files
-./service/app/api/v1/logs/
+./app/api/v1/logs/
 *.log
 
 # air tmp dir
-./service/app/api/v1/tmp/
+./app/api/v1/tmp/
 main
 *.debug

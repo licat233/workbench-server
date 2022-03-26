@@ -1,0 +1,36 @@
+Name: app-api
+Host: 0.0.0.0
+Port: 9100
+Mysql:
+  DataSource: workbench:8kMRrkDB2aKkf5Mk@tcp(127.0.0.1:3306)/workbench?parseTime=True&charset=utf8mb4&collation=utf8mb4_unicode_ci&loc=Local
+Casbin: 
+  ModelConf: /www/wwwroot/workbench/workbench-server/common/rbac_with_domains_model.conf
+Redis:
+  - Host: 127.0.0.1:6379
+    Pass:
+    Type: node
+Auth:
+  AccessSecret: licat233333333
+  AccessExpire: 86400
+Public:
+  Path: /www/wwwroot/workbench/workbench-server/public
+  Upload:
+    Path: upload
+    Images:
+      Path: images
+      Avatar:
+        Path: avatar
+    Collect:
+      Path: collect
+  Static:
+    Path: static
+    Js:
+      Path: js
+    Css:
+      Path: css
+    Images:
+      Path: images
+    Svg:
+      Path: svg
+    Json:
+      Path: json
