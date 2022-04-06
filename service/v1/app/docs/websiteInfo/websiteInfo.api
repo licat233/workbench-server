@@ -1,0 +1,20 @@
+info(
+	title: "网站信息"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+@server(
+	jwt: Auth
+	middleware: JwtMiddleware,CasbinMiddleware,OperationRecordMiddleware
+	group: websiteInfo
+    prefix: /v1/websiteInfo
+)
+service app-api {
+	@doc(
+		summary: "网站信息"
+	)
+	@handler getWebsiteInfo
+	get / returns(BaseResp)
+}

@@ -1,0 +1,20 @@
+info(
+	title: "粉丝"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+@server(
+	jwt: Auth
+	middleware: JwtMiddleware,CasbinMiddleware,OperationRecordMiddleware
+	group: fans
+    prefix: /v1/fans
+)
+service app-api {
+	@doc(
+		summary: "粉丝"
+	)
+	@handler FansList
+	get /fansList(ListReq) returns(BaseResp)
+}

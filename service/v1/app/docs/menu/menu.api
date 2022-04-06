@@ -1,0 +1,44 @@
+info(
+	title: "菜单"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+@server(
+	jwt: Auth
+	middleware: JwtMiddleware,CasbinMiddleware,OperationRecordMiddleware
+	group: menu
+    prefix: /v1/menu
+)
+service app-api {
+	@doc(
+		summary: "菜单"
+	)
+	@handler getMenu
+	get /getMenu returns(BaseResp)
+	
+	@handler getMenuList
+	get /getMenuList(ListReq) returns(BaseResp)
+	
+	@handler addMenuAuthority
+	post /addMenuAuthority returns(BaseResp)
+	
+	@handler getMenuAuthority
+	get /getMenuAuthority returns(BaseResp)
+	
+	@handler getBaseMenuTree
+	get /getBaseMenuTree returns(BaseResp)
+	
+	@handler addBaseMenu
+	post /addBaseMenu returns(BaseResp)
+	
+	@handler deleteBaseMenu
+	post /deleteBaseMenu returns(BaseResp)
+	
+	@handler updateBaseMenu
+	post /updateBaseMenu returns(BaseResp)
+	
+	@handler getBaseMenuById
+	get /getBaseMenuById returns(BaseResp)
+}

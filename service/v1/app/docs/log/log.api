@@ -1,0 +1,34 @@
+info(
+	title: "日志"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+type LogListReq {
+	Start    string `json:"start"`       //开始日期
+	End      string `json:"end"`         //结束日期
+	Ip       string `json:"ip,optional"` //IP
+	PageSize int64  `json:"pageSize"`    //每页数量
+	Current  int64  `json:"current"`     //当前页码
+}
+
+@server(
+	jwt: Auth
+	middleware: JwtMiddleware, CasbinMiddleware
+    group: log
+    prefix: /v1/log
+)
+service app-api {
+	@doc(
+		summary: "获取日志，根据参数，可获取所有日志、日期日志，IP日志"
+	)
+	@handler GetAllLog
+	post /all(LogListReq) returns(BaseResp)
+	
+	@doc(
+		summary: "获取登录日志"
+	)
+	@handler GetLoginLog
+	post /login(LogListReq) returns (BaseResp)
+}

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-/** StructAssign 合并两个数据相同的不同结构体
+/** StructAssign 合并两个数据相同的不同结构体，将source的值转移到target
  * @target type interface 要修改的结构体指针
  * @source type interface 有数据的结构体指针
  */

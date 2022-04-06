@@ -10,7 +10,7 @@
   >```
   >git clone git@github.com:licat233/workbench-server.git
   >```
-
+---
 ## 代码提交
 1. 先配置 SSH 公钥获取仓库拉取提交权限
    ><a href="https://help.coding.net/docs/repo/ssh/config.html">配置 SSH 公钥教程</a>
@@ -31,6 +31,7 @@
    >```
    >git push origin --all
    >```
+---
 ### ☆重置仓库方法（慎用）
    >1.选择最新的分支
    >```
@@ -56,7 +57,7 @@
    >```
    >git push -f origin main
    >```
-----------------------------------------  
+---
 
 ## 开发进度：
 >> 1. Captcha服务已经开发完成；
@@ -72,7 +73,7 @@
 >>> * 由于要区分不同的公司人员，所以采用【域/租户模型】；
 >>> * rbac api服务开发完成;
 
----------------------------------------  
+---
 
 ## 服务组成
 >> 1. captcha;
@@ -83,53 +84,53 @@
 ## 命名要求
 ###  * 服务包名必须以Service结尾，如captchaService;  
 ###  * goctl命名风格必须为 -style goZero;  
------------------------------------------  
+--- 
 
 ## 一. MySQL  
 > ### 1. 多表关联查询:  (注意LEFT、RIGHT、INNER JOIN的区别)
->> ```
+>> ```sql
 >> SELECT %s FROM %s AS u LEFT JOIN company AS c ON u.user_company_id = c.cid LEFT JOIN sys_role AS s ON u.user_role_id = s.rid WHERE u.user_mobile = ?;
 >> ```
 > ### 2. 查询指定日期范围内的数据（需要指定到日，关键词 DATA_FORMAT, BETWEEN)
->> ```
+>> ```sql
 >> SELECT %s FROM %s WHERE date_format(create_time,'%Y-%m-%d') >= date_format(start,'%Y-%m-%d') AND date_format(create_time,'%Y-%m-%d') <= date_format(end,'%Y-%m-%d');
 >> ```
 >> 或者这样写(推荐)
->> ```
+>> ```sql
 >> SELECT %s FROM %s WHERE `create_time` BETWEEN start AND end;
 >> ```
 > ### 3. 查询符合条件的条数: (关键函数 COUNT())
->> ```
+>> ```sql
 >> SELECT COUNT(*) FROM `sys_log` WHERE date_format(`create_time`,'%Y-%m-%d')= date;
 >> ```
->> ```
+>> ```sql
 >> SELECT COUNT(*) FROM `sys_log` WHERE `ip`= ip AND to_days(`create_time`) = to_days(CURDATE());
 >> ```
-
+---
 ## 二. 使用基于grpc的go-zero微服务框架  
 ## 常用gotcl插件命令：
 ## 1. api 服务
 > ### ①. 生成api文件命令
 >>
->> ```
+>> ```bash
 >> goctl api -o app.api
 >> ```
 >>
 > ### ②. 根据 api文件 生成 api服务，-dir='api路径'
 >>
->> ```
->> goctl api go -api app.api -dir='../v1' -style goZero
+>> ```bash
+>> goctl api go -api app.api -dir='../api' --style goZero
 >> ```
 >>
 > ### ③. 启动 api 服务
 >>
->> ```
+>> ```bash
 >> go run api/user.go -f api/etc/user-api.yaml
 >> ```
 >>
 > ### ④. 端口测试
 >>
->> ```
+>> ```bash
 >> curl -i -X POST \
 >>    http://127.0.0.1:8888/user/login \
 >>    -H 'content-type: application/json' \
@@ -139,58 +140,58 @@
 >>      "ticket": "213d22"
 >>  }'
 >> ```
-
+---
 ## 2. rpc 服务
 > ### ①. 生成 rpc 模板文件 user.proto
->> ```
+>> ```bash
 >> goctl rpc template -o user.proto
 >> ```
 >>
 > ### ②. 根据 proto文件 生成 rpc代码
->> ```
->> goctl rpc proto -src app.proto -dir='./v1' -style goZero
+>> ```bash
+>> goctl rpc protoc app.proto --go_out='./v1' --go-grpc_out='./v1' --zrpc_out='./v1' --style goZero
 >> ```
 >>
 > ### ③. 启动 rpc 服务
->> ```
+>> ```bash
 >> go run user.go -f rpc/etc/user.yaml
 >> ```
-
+---
 ## 3. model 基础代码生成
 ### * 例如：根据 user 表生成 model
 > ### ①.  常规生成
->> ```
+>> ```bash
 >> goctl model mysql datasource -url="root:zxcvbnm3.14LICAT@tcp(127.0.0.1:3306)/workbench" -table="user"  -dir='./model' 
 >> ```
 > ### ②.  带有缓存
->> ```
+>> ```bash
 >> goctl model mysql datasource -url="root:zxcvbnm3.14LICAT@tcp(127.0.0.1:3306)/workbench" -table="user"  -dir='./model' -cache=true
 >> ```
 > ### ③.  使用驼峰法命名
->> ```
+>> ```bash
 >> goctl model mysql datasource -url="root:zxcvbnm3.14LICAT@tcp(127.0.0.1:3306)/workbench" -table="user"  -dir='./model' -style goZero
 >> ```
 > ### ④.  带有缓存且使用驼峰法命名（推荐）
->> ```
+>> ```bash
 >> goctl model mysql datasource -url="workbench:8kMRrkDB2aKkf5Mk@tcp(127.0.0.1:3306)/workbench" -table="brand"  -dir='./model' -cache=true -style goZero
 >> ```
-
+---
 ## 4. swagger生成
 ###
 >①生成swagger.json 文件
->>```
+>>```bash
 >> goctl api plugin -plugin goctl-swagger="swagger -filename user.json" -api user.api -dir .
 >>```
 >②指定Host，basePath api-host-and-base-path
->>```
+>>```bash
 >>goctl api plugin -plugin goctl-swagger="swagger -filename user.json -host 0.0.0.0 -basepath /api" -api user.api -dir .
 >>```
 >③swagger ui 查看生成的文档
->>```
+>>```bash
 >>docker run --rm -p 8083:8080 -e SWAGGER_JSON=/foo/user.json -v $PWD:/foo swaggerapi/swagger-ui
 >>```
 >④Swagger Codegen 生成客户端调用代码(go,javascript,php)
->>```
+>>```bash
 >>for l in javascript; do
 >>  docker run --rm -v "$(pwd):/go-work" swaggerapi/swagger-codegen-cli generate \
 >>    -i "/go-work/rest.swagger.json" \
@@ -201,34 +202,42 @@
 ----------------------------------------------------------------
 
 # 三、日志打印关闭
-> ```
+> ```go
 > logx.Disable()
 > ```
 
 # 四、自定义错误处理
+> ```go
+> httpx.SetErrorHandler(errorx.ErrorToErrorX)
 > ```
-> httpx.SetErrorHandler(errorx.ErrorHandler)
-> ```
-> ```
-> func ErrorHandler(err error) (int, interface{}) {
->	if err == nil {
->		return http.StatusInternalServerError, nil
->	}
->	if v,b := err.(*CodeError); b == true {
->		return http.StatusOK, v.Data()
->	}
->	return http.StatusOK, NewErrorResponse(fmt.Sprint(err),nil)
-> }
-> ```
+ ```go
+func ErrorToErrorX(inerr error) (int, interface{}) {
+	if inerr == nil {
+		//没有错误，应该正常返回
+		return http.StatusOK, &struct {
+			Success bool `json:"success"` // 请求状态。
+		}{
+			Success: true,
+		}
+	}
+	//类型断言看是否为 Errorx 类型
+	if v, ok := inerr.(*Errorx); ok {
+		//无需处理，直接返回
+		return http.StatusOK, v
+	}
+	//原生错误，我们默认把原生error作为ExternalError
+	return http.StatusOK, ExternalError(inerr.Error(), nil)
+}
+ ```
 
 # 五、数据库连接
-> ```
+> ```go
 > mysqlConn := sqlx.NewMysql(c.Mysql.DataSource)
 > redisConn := redis.NewRedis(c.CacheRedis[0].Host, c.CacheRedis[0].Type, c.CacheRedis[0].Pass)
 > ```
 
 # 六、grpc连接
-> ```
+> ```go
 > captchaClient.NewCaptcha(zrpc.MustNewClient(c.CaptchaRpc))
 > ```
 
@@ -252,22 +261,22 @@
 
 # 九、通过api文件生成swagger文档
 > ①生成swagger.json 文件
->> ```
+>> ```bash
 >> goctl api plugin -plugin goctl-swagger="swagger -filename foo/app.json" -api app.api -dir .
 >> ```
 >
 > ②指定Host，basePath api-host-and-base-path
->> ```
+>> ```bash
 >> goctl api plugin -plugin goctl-swagger="swagger -filename app.json -host api.catli.net -basepath /" -api app.api -dir .
 >> ```
 >
 > ③swagger ui 查看生成的文档
->> ```
+>> ```bash
 >> docker run --rm -p 8083:8080 -e SWAGGER_JSON=/foo/app.json -v $PWD:/foo swaggerapi/swagger-ui
 >> ```
 >
 > ④Swagger Codegen 生成客户端调用代码(go,javascript,php)
->> ```
+>> ```bash
 >> for l in ts; do
 >>  docker run --rm -v "$(pwd):/go-work" swaggerapi/swagger-codegen-cli generate \
 >>    -i "/go-work/rest.swagger.json" \
@@ -279,7 +288,7 @@
 # 十、Nignx静态资源配置
 
 自行根据资源位置更改root路径
->```
+>```bash
 >#静态资源配置-图片
 >location ~ /storage/.*\.(jpg|png|jpeg|gif|ico|svg|webp|bmp|swf)$ 
 >{
@@ -305,3 +314,18 @@
 >   #autoindex on;
 >}
 >```
+
+# 十一、修改系统时区，由UTC->CST时区：
+## step 1: 先安装TimeZone数据  
+```bash
+apk add --no-cache tzdata
+```
+## step 2: 修改 localtime  
+方式一：覆盖 localtime 文件  
+```bash
+cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+```
+方式二：设置 /etc/localtim 指向文件  
+```bash
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+```

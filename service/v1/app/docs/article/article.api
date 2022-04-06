@@ -1,0 +1,20 @@
+info(
+	title: "推文"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+@server(
+	jwt: Auth
+	middleware: JwtMiddleware,CasbinMiddleware,OperationRecordMiddleware
+	group: article
+    prefix: /v1/article
+)
+service app-api {
+	@doc(
+		summary: "推文"
+	)
+	@handler ArticleList
+	get /articleList(ListReq) returns(BaseResp)
+}

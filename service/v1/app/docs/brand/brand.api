@@ -1,0 +1,20 @@
+info(
+	title: "品牌"
+	author: "licat"
+	email: "1697470538@qq.com"
+	version: "v1"
+)
+
+@server(
+	jwt: Auth
+	middleware: JwtMiddleware,CasbinMiddleware,OperationRecordMiddleware
+	group: brand
+    prefix: /v1/brand
+)
+service app-api {
+	@doc(
+		summary: "品牌"
+	)
+	@handler GetBrandList
+	get /brandList(ListReq) returns(BaseResp)
+}
