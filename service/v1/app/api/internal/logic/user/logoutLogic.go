@@ -2,12 +2,14 @@ package user
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"net/http"
 
 	"workbench-server/common/errorx"
+	"workbench-server/common/jwtx"
 	"workbench-server/common/jwtx/model"
 	"workbench-server/common/respx"
+	"workbench-server/common/tool"
 	"workbench-server/service/v1/app/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -39,8 +41,19 @@ func (l *LogoutLogic) Logout(r *http.Request) (any, error) {
 ///返回 errerrorx.InternalError
 func LogoutHandler(ctx context.Context, r *http.Request) error {
 	jwtToken := r.Header.Get("x-token")
-	uid := ctx.Value("uid")
-	err := model.InsertToRedis(jwtToken, fmt.Sprint(uid), model.LOGOUT)
+	uid, err := tool.GetJwtUid(ctx)
+	if err != nil {
+		return err
+	}
+	claims, err := jwtx.NewJWT().ParseToken(jwtToken)
+	if err != nil {
+		return err
+	}
+	exp := jwtx.ExpiredTime(*claims)
+	if exp == 0 {
+		return errors.New("获取jwt过期时间失败")
+	}
+	err = model.InsertToRedis(uid, jwtToken, exp, model.LOGOUT)
 	if err != nil {
 		return err
 	}

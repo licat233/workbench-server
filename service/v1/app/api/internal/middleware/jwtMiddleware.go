@@ -47,7 +47,6 @@ func (m *JwtMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 				httpx.Error(w, errors.New("当前登录已被注销"))
 				return
 			case model.REPEAL:
-
 				httpx.Error(w, fmt.Errorf("当前账号已在其它%s设备上登录，被迫下线", platform))
 				return
 			case model.OVERDUE:

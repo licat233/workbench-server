@@ -14,7 +14,7 @@ var (
 )
 
 type JwtBaseInfo struct {
-	Uid    string `json:"uid"`    //用户ID
+	Uid    int64  `json:"uid"`    //用户ID
 	Status string `json:"status"` //当前状态：REPEAL | LOGOUT | OVERDUE
 }
 
@@ -46,17 +46,17 @@ func FindJwtInRedis(jwtToken string) (*JwtBaseInfo, error) {
  * key: token
  * value: {uid int64, status string}
  */
-func InsertToRedis(jwtToken, uid, status string) error {
-	workbenchJwtBlacklistsJwtKey := fmt.Sprintf("%s%s", cacheWorkbenchJwtBlacklistsJwtPrefix, jwtToken)
+func InsertToRedis(uid int64, jwt string, exp int64, status string) error {
+	workbenchJwtBlacklistsJwtKey := fmt.Sprintf("%s%s", cacheWorkbenchJwtBlacklistsJwtPrefix, jwt)
 	v := JwtBaseInfo{
 		Uid:    uid,
 		Status: status,
 	}
-	value, err := json.Marshal(v)
+	res, err := json.Marshal(v)
 	if err != nil {
 		return errorx.InternalError("服务器错误", err)
 	}
-	err = global.RedisX.Set(workbenchJwtBlacklistsJwtKey, string(value))
+	err = global.RedisX.Setex(workbenchJwtBlacklistsJwtKey, string(res), int(exp))
 	if err != nil {
 		return errorx.InternalError("服务器错误", err)
 	}

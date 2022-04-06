@@ -14,6 +14,7 @@ import (
 	"workbench-server/common/errorx"
 	"workbench-server/common/global"
 	"workbench-server/common/jwtx"
+	jwtModel "workbench-server/common/jwtx/model"
 	"workbench-server/common/respx"
 	"workbench-server/common/utils"
 	"workbench-server/service/v1/app/api/internal/svc"
@@ -81,11 +82,6 @@ func (l *LoginLogic) Login(r *http.Request, req types.UserLoginReq) (any, error)
 	if !captchax.Store.Verify(captchaKey, solution, true) {
 		return nil, errors.New("验证码错误")
 	}
-
-	// verifyResult := base64Captcha.DefaultMemStore.Verify(captchaKey, solution, true)
-	// if !verifyResult {
-	// 	return nil, errors.New("验证码错误")
-	// }
 
 	// ③ip登录次数校验
 	failnum, err := l.svcCtx.LogModel.FindLoginFailCount(reqIp)
@@ -168,6 +164,21 @@ func (l *LoginLogic) Login(r *http.Request, req types.UserLoginReq) (any, error)
 		return nil, errorx.InternalError("服务器异常", err)
 	}
 
+	//加入jwt白名单中
+	expireAt := jwtx.ExpiredTime(customClaims)
+	expireTime := time.Unix(expireAt, 0).Local()
+	jwtInfo := &jwtModel.JwtWhitelists{
+		Uid:        userInfo.Uid,
+		Jwt:        jwtToken,
+		Platform:   platform,
+		Ip:         reqIp,
+		ExpireTime: expireTime,
+	}
+	_, err = jwtx.JwtWhitelist.Insert(r.Context(), jwtInfo)
+	if err != nil {
+		return nil, errorx.InternalError("服务器异常", err)
+	}
+
 	Resp := &types.JwtToken{
 		AccessToken:  jwtToken,
 		AccessExpire: time.Now().Unix() + Duration,
@@ -178,18 +189,21 @@ func (l *LoginLogic) Login(r *http.Request, req types.UserLoginReq) (any, error)
 	}
 
 	// 更新登录信息，注意：务必再添加登录成功日志之前执行
+	// TODO：异步队列
 	if e := l.PutLoginInfo(userInfo.Uid); e != nil {
 		return nil, errorx.InternalError("登录失败,更新登录信息失败", e)
 	}
 
 	//移除相同设备已登录token，注意：务必再添加登录成功日志之前执行
 	//强制注销另一个相同设备的token（消息队列）
+	//TODO：异步队列
 	l.LoginOutToken(userInfo.Uid, platform)
 	if err := l.LoginOutToken(userInfo.Uid, platform); err != nil {
 		return nil, err
 	}
 
 	//登录成功日志
+	// TODO：异步队列
 	LogInfo.Message = "登录成功"
 	LogInfo.Status = 1
 	LogInfo.Resp = string(RespStr)
@@ -201,22 +215,6 @@ func (l *LoginLogic) Login(r *http.Request, req types.UserLoginReq) (any, error)
 
 	return respx.SingleResp("登录成功！", Resp), nil
 }
-
-// func (l *LoginLogic) CreateJwtToken(iat, seconds, userId, userRoleId, userCompanyId int64, ip, platform string) (string, error) {
-// 	claims := make(jwt.MapClaims)
-// 	claims["exp"] = iat + seconds       // 过期时间 24h  配置文件，go-zero这垃圾框架后不会解析这个值，最好自己重新配一个，为下：ExpiresAt
-// 	claims["ExpiresAt"] = iat + seconds // 过期指定时间，单位s，自己额外配置的
-// 	claims["iat"] = iat                 // 签名生效时间
-// 	claims["userId"] = userId
-// 	claims["userRoleId"] = userRoleId
-// 	claims["userCompanyId"] = userCompanyId
-// 	claims["ip"] = ip
-// 	claims["platform"] = platform
-// 	// 创建一个新的令牌对象，指定签名方法和声明
-// 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-// 	// 使用密码签名并获得完整的编码令牌作为字符串
-// 	return token.SignedString([]byte(l.svcCtx.Config.Auth.AccessSecret))
-// }
 
 func (l *LoginLogic) AddLoginLog(data *model.SysLog) error {
 	if _, err := l.svcCtx.LogModel.Insert(data); err != nil {
@@ -250,51 +248,29 @@ func (l *LoginLogic) PutLoginInfo(uid int64) error {
 
 //LoginOutToken 平台单点登录-主动注销处理，登录当前平台后，会主动注销之前的token
 func (l *LoginLogic) LoginOutToken(uid int64, platform string) error {
-	//查询日志，寻找上一个相同登录平台的token
-	lastLog, err := l.svcCtx.LogModel.FindLastLogin(uid, platform)
-	if err == model.ErrNotFound {
-		return nil
-	}
-	if err != nil {
-		return errorx.InternalError("获取最后一次登录日志失败", err)
-	}
-	if len(lastLog.JwtToken) == 0 {
-		return errorx.InternalError("jwtToken不存在", nil)
-	}
-
-	TokenKey := fmt.Sprintf("token:blacklist:%s", lastLog.JwtToken)
-
-	//判断redis中是否存在已注销token
-	val, err := l.svcCtx.Redis.Get(TokenKey)
-	if err != nil {
-		return errorx.InternalError("redis服务器错误", err)
-	}
-	if val == "logout" {
-		//发现已经被主动注销了，无需重复注销
-		return nil
-	}
-
-	// 从token中取过期时间
-	jwtObj := jwtx.NewJWT()
-	claims, err := jwtObj.ParseToken(lastLog.JwtToken)
-	if err != nil {
-		return errorx.InternalError("jwtToken解析失败", err)
-	}
-
-	if claims.Valid() != nil {
-		return nil
-	}
-
-	exp := jwtx.ExpiredTime(*claims)
-	now := time.Now().Unix()
-	dura := exp - now
-	//token本身已经过期了，不用销毁
-	if dura <= 0 {
-		return nil
-	}
-	//此token未过期，需要要销毁
-	if err := l.svcCtx.Redis.Setex(TokenKey, "repeal", int(dura)); err != nil {
-		return errorx.InternalError("token销毁失败", err)
+	//查询白名单jwt，uid与platform
+	list, err := jwtx.JwtWhitelist.FindAllByUidAndplatform(uid, platform)
+	for _, info := range list {
+		black := &jwtModel.JwtBlacklists{
+			Uid:        info.Uid,
+			Jwt:        info.Jwt,
+			Platform:   info.Platform,
+			Ip:         info.Ip,
+			ExpireTime: info.ExpireTime,
+		}
+		//如果没有过期，就加入黑名单，同时加入redis
+		if info.ExpireTime.Unix() > time.Now().Local().Unix() {
+			if _, err := jwtx.JwtBlacklist.Insert(l.ctx, black); err != nil {
+				return errorx.InternalError("MYSQL服务器jwt黑名单增加失败", err)
+			}
+			if err := jwtModel.InsertToRedis(black.Uid, black.Jwt, black.ExpireTime.Unix(), jwtModel.REPEAL); err != nil {
+				return errorx.InternalError("Redis服务器jwt黑名单增加失败", err)
+			}
+		}
+		err = jwtx.JwtWhitelist.Delete(l.ctx, info.Id)
+		if err != nil {
+			return errorx.InternalError("jwt白名单删除失败", err)
+		}
 	}
 	return nil
 }

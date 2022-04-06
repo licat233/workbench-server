@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/cache"
@@ -28,6 +29,7 @@ type (
 		FindOne(ctx context.Context, id int64) (*JwtWhitelists, error)
 		Update(ctx context.Context, data *JwtWhitelists) error
 		Delete(ctx context.Context, id int64) error
+		CustomJwtWhitelistModel
 	}
 
 	defaultJwtWhitelistsModel struct {
@@ -36,14 +38,14 @@ type (
 	}
 
 	JwtWhitelists struct {
-		Id          int64        `db:"id"`
-		Uid         int64        `db:"uid"`          // 用户id
-		Jwt         string       `db:"jwt"`          // jwt-token
-		Platform    string       `db:"platform"`     // 绑定平台
-		Ip          string       `db:"ip"`           // 绑定ip
-		CreatedTime sql.NullTime `db:"created_time"` // 创建时间
-		UpdatedTime sql.NullTime `db:"updated_time"` // 更新时间
-		ExpireTime  sql.NullTime `db:"expire_time"`  // 过期时间
+		Id          int64     `db:"id"`
+		Uid         int64     `db:"uid"`          // 用户id
+		Jwt         string    `db:"jwt"`          // jwt-token
+		Platform    string    `db:"platform"`     // 绑定平台
+		Ip          string    `db:"ip"`           // 绑定ip
+		CreatedTime time.Time `db:"created_time"` // 创建时间
+		UpdatedTime time.Time `db:"updated_time"` // 更新时间
+		ExpireTime  time.Time `db:"expire_time"`  // 过期时间
 	}
 )
 

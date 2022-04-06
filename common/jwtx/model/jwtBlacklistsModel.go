@@ -38,14 +38,14 @@ type (
 	}
 
 	JwtBlacklists struct {
-		Id          int64        `db:"id"`
-		Uid         int64        `db:"uid"`          // 用户id
-		Jwt         string       `db:"jwt"`          // jwt-token
-		Platform    string       `db:"platform"`     // 绑定平台
-		Ip          string       `db:"ip"`           // 绑定ip
-		CreatedTime sql.NullTime `db:"created_time"` // 创建时间
-		UpdatedTime time.Time    `db:"updated_time"` // 更新时间
-		ExpireTime  sql.NullTime `db:"expire_time"`  // 过期时间
+		Id          int64     `db:"id"`
+		Uid         int64     `db:"uid"`          // 用户id
+		Jwt         string    `db:"jwt"`          // jwt-token
+		Platform    string    `db:"platform"`     // 绑定平台
+		Ip          string    `db:"ip"`           // 绑定ip
+		CreatedTime time.Time `db:"created_time"` // 创建时间
+		UpdatedTime time.Time `db:"updated_time"` // 更新时间
+		ExpireTime  time.Time `db:"expire_time"`  // 过期时间
 	}
 )
 

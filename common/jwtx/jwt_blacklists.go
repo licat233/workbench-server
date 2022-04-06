@@ -1,4 +1,4 @@
-package logic
+package jwtx
 
 import (
 	"workbench-server/common/global"

@@ -5,9 +5,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
-	"time"
 
 	"workbench-server/common/errorx"
 	"workbench-server/common/global"
@@ -66,20 +64,4 @@ func (l *PutCurrentUserPasswordLogic) PutCurrentUserPassword(req *types.UserPutP
 		return nil, errorx.InternalError("密码更改成功，注销token失败", err)
 	}
 	return respx.StateResp("密码更改成功，当前登录已注销，请使用新密码重新登录"), nil
-}
-
-func (l *PutCurrentUserPasswordLogic) Logout(r *http.Request) (any, error) {
-	exp, err := strconv.ParseInt(fmt.Sprintf("%v", l.ctx.Value("ExpiresAt")), 10, 64)
-	if err != nil {
-		return nil, errorx.InternalError("获取过期时间失败", err)
-	}
-	now := time.Now().Unix()
-	dura := exp - now
-	if dura <= 0 {
-		return nil, errorx.InternalError("当前登录已过期，无需主动注销", nil)
-	}
-	jwtToken := r.Header.Get("Authorization")
-	token := fmt.Sprintf("token:blacklist:%s", jwtToken)
-	err = l.svcCtx.Redis.Setex(token, "logout", int(dura))
-	return respx.Msg(err, nil, "注销成功", "注销失败:Redis错误")
 }
