@@ -51,6 +51,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) LoginLogic {
  * ⑥返回 jwt 给前端
  */
 func (l *LoginLogic) Login(r *http.Request, req types.UserLoginReq) (any, error) {
+
 	// ①获取登录的所有信息，验证码、账号、密码、ip与platform
 	solution := strings.TrimSpace(req.Solution)
 	if len(solution) == 0 {
@@ -72,7 +73,6 @@ func (l *LoginLogic) Login(r *http.Request, req types.UserLoginReq) (any, error)
 	}
 
 	reqIp := utils.RemoteIp(r)
-
 	platform, err := utils.RemotePlatform(r)
 	if err != nil {
 		return nil, err
@@ -149,7 +149,6 @@ func (l *LoginLogic) Login(r *http.Request, req types.UserLoginReq) (any, error)
 	if req.AutoLogin {
 		Duration = Duration * 7 // 7天内免登录
 	}
-	jwtObj := jwtx.NewJWT()
 	baseClaims := jwtx.BaseClaims{
 		Uid:      userInfo.Uid,
 		Ip:       reqIp,
@@ -158,13 +157,14 @@ func (l *LoginLogic) Login(r *http.Request, req types.UserLoginReq) (any, error)
 	}
 
 	//构建jwt
-	customClaims := jwtObj.CreateMapClaims(baseClaims)
-	jwtToken, err := jwtObj.CreateToken(customClaims)
+	customClaims := jwtx.CreateMapClaims(baseClaims)
+	jwtToken, err := jwtx.CreateToken(customClaims)
 	if err != nil {
 		return nil, errorx.InternalError("服务器异常", err)
 	}
 
 	//加入jwt白名单中
+	//TODO：消息队列
 	expireAt := jwtx.ExpiredTime(customClaims)
 	expireTime := time.Unix(expireAt, 0).Local()
 	jwtInfo := &jwtModel.JwtWhitelists{
@@ -174,18 +174,16 @@ func (l *LoginLogic) Login(r *http.Request, req types.UserLoginReq) (any, error)
 		Ip:         reqIp,
 		ExpireTime: expireTime,
 	}
-	_, err = jwtx.JwtWhitelist.Insert(r.Context(), jwtInfo)
+	_, err = l.svcCtx.Jwt.JwtWhitelistsModel.Insert(r.Context(), jwtInfo)
 	if err != nil {
 		return nil, errorx.InternalError("服务器异常", err)
 	}
 
-	Resp := &types.JwtToken{
-		AccessToken:  jwtToken,
-		AccessExpire: time.Now().Unix() + Duration,
-	}
-	RespStr, err := json.Marshal(Resp)
-	if err != nil {
-		return nil, errorx.InternalError("json.Marshal failed，Resp转json失败", err)
+	//移除相同设备已登录token，注意：务必再添加登录成功日志之前执行
+	//强制注销其它相同设备的token
+	//TODO：消息队列
+	if err := l.LoginOutToken(userInfo.Uid, platform, jwtToken); err != nil {
+		return nil, err
 	}
 
 	// 更新登录信息，注意：务必再添加登录成功日志之前执行
@@ -194,16 +192,16 @@ func (l *LoginLogic) Login(r *http.Request, req types.UserLoginReq) (any, error)
 		return nil, errorx.InternalError("登录失败,更新登录信息失败", e)
 	}
 
-	//移除相同设备已登录token，注意：务必再添加登录成功日志之前执行
-	//强制注销另一个相同设备的token（消息队列）
-	//TODO：异步队列
-	l.LoginOutToken(userInfo.Uid, platform)
-	if err := l.LoginOutToken(userInfo.Uid, platform); err != nil {
-		return nil, err
-	}
-
 	//登录成功日志
 	// TODO：异步队列
+	Resp := &types.JwtToken{
+		AccessToken:  jwtToken,
+		AccessExpire: time.Now().Unix() + Duration,
+	}
+	RespStr, err := json.Marshal(Resp)
+	if err != nil {
+		return nil, errorx.InternalError("json.Marshal failed，Resp转json失败", err)
+	}
 	LogInfo.Message = "登录成功"
 	LogInfo.Status = 1
 	LogInfo.Resp = string(RespStr)
@@ -212,10 +210,10 @@ func (l *LoginLogic) Login(r *http.Request, req types.UserLoginReq) (any, error)
 	if e := l.AddLoginLog(LogInfo); e != nil {
 		return nil, errorx.InternalError("登录失败,日志错误", e)
 	}
-
 	return respx.SingleResp("登录成功！", Resp), nil
 }
 
+//AddLoginLog 添加登录日志
 func (l *LoginLogic) AddLoginLog(data *model.SysLog) error {
 	if _, err := l.svcCtx.LogModel.Insert(data); err != nil {
 		global.ZAP.Error(fmt.Sprintf("[%v]日志添加失败", *data), zap.Error(err))
@@ -227,30 +225,32 @@ func (l *LoginLogic) AddLoginLog(data *model.SysLog) error {
 //PutLoginInfo 更新最后一次登录时间与总登录次数，更新至用户信息
 func (l *LoginLogic) PutLoginInfo(uid int64) error {
 	LoginCount, err := l.svcCtx.LogModel.FindLoginCountByUid(uid)
-	if err != nil {
+	if err != nil && err == model.ErrNotFound {
 		return fmt.Errorf("查询登录次数出错:%s", err)
 	}
 
 	//算上本次，所以 +1
 	LoginCount++
+	var LastLoginTime time.Time
 	LastLoginLog, err := l.svcCtx.LogModel.FindLastLoginByUid(uid)
-	if err != nil {
-		if err == sqlc.ErrNotFound {
-			//从未登录过，设为当前时间
-			LastLoginLog.CreateTime = time.Now()
-		} else {
-			return fmt.Errorf("查询最后登录日志出错:%s", err)
-		}
+	if err != nil && err != sqlc.ErrNotFound {
+		return fmt.Errorf("查询最后登录日志出错:%s", err)
+	} else if err == sqlc.ErrNotFound {
+		LastLoginTime = time.Now().Local()
+	} else {
+		LastLoginTime = LastLoginLog.CreateTime
 	}
-
-	return l.svcCtx.UserModel.UpdateLoginInfo(uid, LoginCount, LastLoginLog.CreateTime)
+	return l.svcCtx.UserModel.UpdateLoginInfo(uid, LoginCount, LastLoginTime)
 }
 
 //LoginOutToken 平台单点登录-主动注销处理，登录当前平台后，会主动注销之前的token
-func (l *LoginLogic) LoginOutToken(uid int64, platform string) error {
-	//查询白名单jwt，uid与platform
-	list, err := jwtx.JwtWhitelist.FindAllByUidAndplatform(uid, platform)
+func (l *LoginLogic) LoginOutToken(uid int64, platform string, filterJwt string) error {
+	//查询白名单jwt，通过uid与platform
+	list, err := l.svcCtx.Jwt.JwtWhitelistsModel.FindAllByUidAndplatform(uid, platform)
 	for _, info := range list {
+		if info.Jwt == filterJwt {
+			continue
+		}
 		black := &jwtModel.JwtBlacklists{
 			Uid:        info.Uid,
 			Jwt:        info.Jwt,
@@ -260,14 +260,15 @@ func (l *LoginLogic) LoginOutToken(uid int64, platform string) error {
 		}
 		//如果没有过期，就加入黑名单，同时加入redis
 		if info.ExpireTime.Unix() > time.Now().Local().Unix() {
-			if _, err := jwtx.JwtBlacklist.Insert(l.ctx, black); err != nil {
+			if _, err := l.svcCtx.Jwt.JwtBlacklistsModel.Insert(l.ctx, black); err != nil {
 				return errorx.InternalError("MYSQL服务器jwt黑名单增加失败", err)
 			}
-			if err := jwtModel.InsertToRedis(black.Uid, black.Jwt, black.ExpireTime.Unix(), jwtModel.REPEAL); err != nil {
+			if err := jwtModel.InsertToRedis(black.Jwt, black.Uid, jwtModel.REPEAL, black.ExpireTime.Unix()); err != nil {
 				return errorx.InternalError("Redis服务器jwt黑名单增加失败", err)
 			}
 		}
-		err = jwtx.JwtWhitelist.Delete(l.ctx, info.Id)
+		//删除查询到的白名单jwt
+		err = l.svcCtx.Jwt.JwtWhitelistsModel.Delete(l.ctx, info.Id)
 		if err != nil {
 			return errorx.InternalError("jwt白名单删除失败", err)
 		}

@@ -20,10 +20,15 @@ import (
 
 func initLogger() {
 	c := logx.LogConf{
-		ServiceName: "woekbench-server",
-		Mode:        "file",
-		Path:        "logxs",
-		Level:       "error",
+		ServiceName:         "woekbench-server",
+		Mode:                "file",
+		Encoding:            "plain",
+		TimeFormat:          "",
+		Path:                "logxs",
+		Level:               "error",
+		Compress:            true,
+		KeepDays:            3,
+		StackCooldownMillis: 200,
 	}
 	logx.MustSetup(c)
 }
@@ -36,19 +41,24 @@ func main() {
 	//初始化项目所需的所有配置
 	initialize.Initialize()
 
-	// 配置logx日志，必须放在前面这个地方
+	// 初始化logx日志，必须放在前面这个地方
 	initLogger()
 
 	//初始化config
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
-
-	c.Auth = global.CONFIG.JWT
+	c.Auth.AccessExpire = global.CONFIG.JWT.AccessExpire
+	c.Auth.AccessSecret = global.CONFIG.JWT.AccessSecret
 
 	//初始化ServiceContext
 	ctx := svc.NewServiceContext(c)
-	server := rest.MustNewServer(c.RestConf, rest.WithCors())
-	// server.Use()
+	//初始化server
+	server := rest.MustNewServer(c.RestConf)
+
+	//server添加cors处理中间件
+	//TODO：该CORS有问题
+	// server.Use(middleware.CorsHandler)
+
 	defer server.Stop()
 
 	//注册路由

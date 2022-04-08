@@ -45,7 +45,7 @@ func LogoutHandler(ctx context.Context, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	claims, err := jwtx.NewJWT().ParseToken(jwtToken)
+	claims, err := jwtx.ParseToken(jwtToken)
 	if err != nil {
 		return err
 	}
@@ -53,7 +53,8 @@ func LogoutHandler(ctx context.Context, r *http.Request) error {
 	if exp == 0 {
 		return errors.New("获取jwt过期时间失败")
 	}
-	err = model.InsertToRedis(uid, jwtToken, exp, model.LOGOUT)
+	//加入redis的jwt黑名单
+	err = model.InsertToRedis(jwtToken, uid, model.LOGOUT, exp)
 	if err != nil {
 		return err
 	}

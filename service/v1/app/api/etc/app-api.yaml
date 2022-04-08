@@ -3,6 +3,10 @@ Host: 0.0.0.0
 Port: 9100
 Mode: dev
 
+Auth:
+  AccessSecret: ""
+  AccessExpire: 0
+
 # Redis:
 #   - Host: 127.0.0.1:6379
 #     Pass:

@@ -20,12 +20,14 @@ var (
 )
 
 type JwtMiddleware struct {
-	JwtService *jwtx.JWT
+	JwtBlacklistsModel model.JwtBlacklistsModel
+	JwtWhitelistsModel model.JwtWhitelistsModel
 }
 
 func NewJwtMiddleware() *JwtMiddleware {
 	return &JwtMiddleware{
-		JwtService: jwtx.NewJWT(),
+		JwtBlacklistsModel: jwtx.NewJwtBlacklist(),
+		JwtWhitelistsModel: jwtx.NewJwtWhitelist(),
 	}
 }
 

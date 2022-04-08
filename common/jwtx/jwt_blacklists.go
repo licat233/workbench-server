@@ -5,7 +5,7 @@ import (
 	"workbench-server/common/jwtx/model"
 )
 
-var JwtBlacklist = NewJwtBlacklist()
+// var JwtBlacklist model.JwtBlacklistsModel
 
 func NewJwtBlacklist() model.JwtBlacklistsModel {
 	return model.NewJwtBlacklistsModel(global.SQLConn, global.CONFIG.Cache.Redis)

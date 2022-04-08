@@ -1,14 +1,16 @@
 package config
 
 import (
-	"workbench-server/config"
-
 	"github.com/zeromicro/go-zero/rest"
 )
 
 type Config struct {
 	rest.RestConf // rest api配置
-	Auth          config.JWT
+	// Auth          config.JWT
+	Auth struct {
+		AccessSecret string
+		AccessExpire int64
+	}
 	// Mysql         struct {
 	// 	DataSource string
 	// }

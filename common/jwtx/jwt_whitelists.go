@@ -5,7 +5,7 @@ import (
 	"workbench-server/common/jwtx/model"
 )
 
-var JwtWhitelist = NewJwtWhitelist()
+// var JwtWhitelist model.JwtWhitelistsModel
 
 func NewJwtWhitelist() model.JwtWhitelistsModel {
 	return model.NewJwtWhitelistsModel(global.SQLConn, global.CONFIG.Cache.Redis)

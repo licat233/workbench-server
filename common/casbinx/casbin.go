@@ -2,6 +2,7 @@ package casbinx
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"sync"
 	"workbench-server/common/global"
@@ -97,13 +98,23 @@ var (
 	once           sync.Once
 )
 
+//Casbin 新建casbin SyncedEnforcer
 func Casbin() *casbin.SyncedEnforcer {
 	once.Do(func() {
-		a, _ := gormadapter.NewAdapterByDB(global.GORM)
-		syncedEnforcer, _ = casbin.NewSyncedEnforcer(global.CONFIG.Casbin.ModelPath, a)
-		syncedEnforcer.AddFunction("ParamsMatch", ParamsMatchFunc)
+		a, err := gormadapter.NewAdapterByDB(global.GORM)
+		if err != nil {
+			panic(fmt.Sprint("初始化casbin数据库失败", err.Error()))
+		}
+		syncedEnforcer, err = casbin.NewSyncedEnforcer(global.CONFIG.Casbin.ModelPath, a)
+		if err != nil {
+			panic(fmt.Sprint("初始化casbin Enforcer失败", err.Error()))
+		}
+		// syncedEnforcer.AddFunction("ParamsMatch", ParamsMatchFunc)
 	})
-	_ = syncedEnforcer.LoadPolicy()
+	err := syncedEnforcer.LoadPolicy()
+	if err != nil {
+		panic(fmt.Sprint("加载casbin策略错误", err.Error()))
+	}
 	return syncedEnforcer
 }
 

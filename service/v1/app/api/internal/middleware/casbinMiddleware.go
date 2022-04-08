@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"workbench-server/common/casbinx"
 	"workbench-server/common/errorx"
 	"workbench-server/common/global"
 	"workbench-server/common/tool"
@@ -21,7 +20,7 @@ type CasbinMiddleware struct {
 
 func NewCasbinMiddleware() *CasbinMiddleware {
 	return &CasbinMiddleware{
-		CasbinService: casbinx.Casbin(),
+		CasbinService: global.CASBIN,
 		UserModel:     model.NewUserModel(global.SQLConn, global.CONFIG.Cache.Redis),
 	}
 }

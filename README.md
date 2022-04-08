@@ -86,6 +86,9 @@
 ###  * goctl命名风格必须为 -style goZero;  
 --- 
 
+## 说明
+> InternalError错误内部会默认ZAP打印日志，所以写业务的时候，无需再写
+
 ## 一. MySQL  
 > ### 1. 多表关联查询:  (注意LEFT、RIGHT、INNER JOIN的区别)
 >> ```sql

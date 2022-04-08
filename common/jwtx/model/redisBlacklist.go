@@ -42,11 +42,11 @@ func FindJwtInRedis(jwtToken string) (*JwtBaseInfo, error) {
 	return res, nil
 }
 
-/** InsertToRedis 插入jwt基本kv信息：
+/** InsertToRedis jwt黑名单存入redis：
  * key: token
  * value: {uid int64, status string}
  */
-func InsertToRedis(uid int64, jwt string, exp int64, status string) error {
+func InsertToRedis(jwt string, uid int64, status string, exp int64) error {
 	workbenchJwtBlacklistsJwtKey := fmt.Sprintf("%s%s", cacheWorkbenchJwtBlacklistsJwtPrefix, jwt)
 	v := JwtBaseInfo{
 		Uid:    uid,

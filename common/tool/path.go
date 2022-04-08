@@ -77,7 +77,7 @@ func StaticServerPathHandler(config any, rootDir string) {
 	dataType := reflect.TypeOf(config)
 	if dataType.Kind() != reflect.Ptr {
 		//传入data不是指针类型
-		panic("PathHandler：请传入指针类型的data")
+		panic("PathHandler：请传入config结构体的指针")
 	}
 	if dataType.Elem().Kind() != reflect.Struct {
 		//"data不是结构体类型

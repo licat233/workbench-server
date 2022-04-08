@@ -4,6 +4,7 @@ import (
 	"sync"
 	"workbench-server/config"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/go-redis/redis/v8"
 	"github.com/spf13/viper"
 	redisx "github.com/zeromicro/go-zero/core/stores/redis"
@@ -14,11 +15,12 @@ import (
 )
 
 var (
-	CONFIG *config.Server //全局配置，务必先初始化
-	VIPER  *viper.Viper   //全局配置器
-	ZAP    *zap.Logger    //全局日志
-	GORM   *gorm.DB       //全局mysql orm
-	REDIS  *redis.Client  //全局redis
+	CONFIG *config.Server         //全局配置，务必先初始化
+	VIPER  *viper.Viper           //全局配置器
+	ZAP    *zap.Logger            //全局日志
+	GORM   *gorm.DB               //全局mysql orm
+	REDIS  *redis.Client          //全局redis
+	CASBIN *casbin.SyncedEnforcer //全局casbin enforcer
 
 	DBList map[string]*gorm.DB //gorm数据库列表
 

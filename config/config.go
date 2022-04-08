@@ -10,7 +10,7 @@ type Server struct {
 	Casbin  Casbin  `mapstructure:"Casbin" json:"Casbin" yaml:"Casbin"`
 	//storage
 	Mysql   Mysql   `mapstructure:"Mysql" json:"Mysql" yaml:"Mysql"`
-	Redis   Redis   `mapstructure:"redis" json:"Redis" yaml:"Redis"`
+	Redis   Redis   `mapstructure:"Redis" json:"Redis" yaml:"Redis"`
 	Cookie  Cookie  `mapstructure:"Cookie" json:"Cookie" yaml:"Cookie"`
 	Session Session `mapstructure:"Session" json:"Session" yaml:"Session"`
 	//缓存

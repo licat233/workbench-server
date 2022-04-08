@@ -1,19 +1,12 @@
 package model
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 	"time"
 	"workbench-server/common/utils"
 
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
-	"github.com/zeromicro/go-zero/core/stores/sqlx"
-)
-
-var (
-	cacheWorkbenchSysLogIpPrefix = "cache:workbench:sysLog:ip:"
-	// cacheWorkbenchSysLogPlatformPrefix = "cache:workbench:sysLog:platform:"
 )
 
 type baseSysLogModel interface {
@@ -25,6 +18,7 @@ type baseSysLogModel interface {
 	FindLastLogin(uid int64, platform string) (*SysLog, error)
 }
 
+//Find 日志列表查询
 func (m *defaultSysLogModel) Find(path, start, end, ip string, Current, PageSize int64) ([]*SysLog, error) {
 	var resp = make([]*SysLog, 0)
 	var err error
@@ -99,19 +93,12 @@ func (m *defaultSysLogModel) Find(path, start, end, ip string, Current, PageSize
 
 //FindLoginFailCount 获取指定IP当天登录错误的次数
 func (m *defaultSysLogModel) FindLoginFailCount(ip string) (int64, error) {
-	ip = strings.TrimSpace(ip)
-	if len(ip) == 0 {
-		return 0, errors.New("查询ip不能为空")
-	}
-	workbenchSysLogIPKey := fmt.Sprintf("%s%s", cacheWorkbenchSysLogIpPrefix, ip)
-	var resp int64
-	err := m.QueryRow(&resp, workbenchSysLogIPKey, func(conn sqlx.SqlConn, v interface{}) error {
-		query := fmt.Sprintf("select COUNT(*) from %s WHERE `ip`= ? AND `status`=0 AND to_days(`create_time`) = to_days(CURDATE())", m.table)
-		return conn.QueryRow(v, query, ip)
-	})
+	var count int64
+	query := fmt.Sprintf("select COUNT(*) from %s WHERE `ip`= ? AND `status`=0 AND to_days(`create_time`) = to_days(CURDATE())", m.table)
+	err := m.QueryRowNoCache(&count, query, ip)
 	switch err {
 	case nil:
-		return resp, nil
+		return count, nil
 	case sqlc.ErrNotFound:
 		return 0, ErrNotFound
 	default:
@@ -119,6 +106,7 @@ func (m *defaultSysLogModel) FindLoginFailCount(ip string) (int64, error) {
 	}
 }
 
+//FindCount 查找总登录次数
 func (m *defaultSysLogModel) FindCount() (int64, error) {
 	var count int64
 	query := fmt.Sprintf("SELECT count(*) FROM %s", m.table)
@@ -133,6 +121,7 @@ func (m *defaultSysLogModel) FindCount() (int64, error) {
 	}
 }
 
+//FindLoginCountByUid 查找登录次数by Uid
 func (m *defaultSysLogModel) FindLoginCountByUid(uid int64) (int64, error) {
 	var count int64
 	query := fmt.Sprintf("SELECT count(*) FROM %s WHERE path='/user/login' AND user_id = %d", m.table, uid)
@@ -147,6 +136,7 @@ func (m *defaultSysLogModel) FindLoginCountByUid(uid int64) (int64, error) {
 	}
 }
 
+//FindLastLoginByUid 查找最后一次成功登录的日志by Uid
 func (m *defaultSysLogModel) FindLastLoginByUid(uid int64) (*SysLog, error) {
 	var resp = &SysLog{}
 	query := fmt.Sprintf("SELECT  %s FROM %s WHERE `user_id`=%d AND `status`=1 AND `path`='/user/login' ORDER BY create_time DESC LIMIT 1", sysLogRows, m.table, uid)
@@ -162,7 +152,6 @@ func (m *defaultSysLogModel) FindLastLoginByUid(uid int64) (*SysLog, error) {
 }
 
 func (m *defaultSysLogModel) FindLastLogin(uid int64, platform string) (*SysLog, error) {
-	//TODO: 需要加入redis缓存
 	var resp = &SysLog{}
 	query := fmt.Sprintf("SELECT  %s FROM %s WHERE `user_id`=%d AND `platform`='%s' AND `status`=1 AND `path`='/user/login' ORDER BY create_time DESC LIMIT 1", sysLogRows, m.table, uid, platform)
 	err := m.QueryRowNoCache(resp, query)

@@ -42,7 +42,7 @@ func (l *MathCaptchaLogic) MathCaptcha(req *types.CaptchaReq) (any, error) {
 		},
 	}
 	driver := param.DriverMath.ConvertFonts()
-	//目前仅支持math验证，后期如果需要，再开启多个方式
+	//目前仅支持math验证，后期如果有需要，再开启多个方式
 	//switch in.CaptchaType {
 	//case "audio":
 	//	driver = param.DriverAudio

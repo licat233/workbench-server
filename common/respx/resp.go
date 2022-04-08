@@ -252,7 +252,7 @@ func DefaultListResp(err error, listData any, totalRecord, pageSize, Current int
 //Msg 根据error返回不同提示信息
 func Msg(err error, data any, successMsg, failedMsg string) (any, error) {
 	if err != nil {
-		return nil, errors.New(failedMsg)
+		return nil, errorx.InternalError(failedMsg, err)
 	}
 	return SingleResp(successMsg, data), nil
 }
